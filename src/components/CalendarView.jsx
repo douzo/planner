@@ -138,24 +138,40 @@ const CalendarView = ({
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <div className="max-w-7xl mx-auto p-8 animate-fade-in">
+    <div className="max-w-7xl mx-auto p-4 md:p-8 animate-fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-4xl font-light text-neutral-text-primary mb-2">
+      <div style={{ marginBottom: '24px' }}>
+        {/* Title and Stats */}
+        <div style={{ marginBottom: '16px' }}>
+          <h1 style={{
+            fontSize: 'clamp(24px, 5vw, 36px)',
+            fontWeight: '300',
+            color: '#1D1D1F',
+            marginBottom: '8px'
+          }}>
             {getMonthName(month)} {year}
           </h1>
-          <div className="flex items-center gap-4">
-            <span className="text-2xl font-semibold" style={{ color: getCompletionColor(stats.percentage) }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <span style={{
+              fontSize: 'clamp(18px, 4vw, 24px)',
+              fontWeight: '600',
+              color: getCompletionColor(stats.percentage)
+            }}>
               {stats.percentage}% Complete
             </span>
-            <span className="text-sm text-neutral-text-secondary">
+            <span style={{ fontSize: '14px', color: '#86868B' }}>
               {stats.completed} of {stats.total} tasks
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        {/* Controls - Responsive */}
+        <div style={{
+          display: 'flex',
+          gap: '8px',
+          flexWrap: 'wrap',
+          alignItems: 'center'
+        }}>
           {/* View Toggle */}
           <div style={{
             display: 'flex',
@@ -166,15 +182,15 @@ const CalendarView = ({
             <button
               onClick={() => setViewMode('calendar')}
               style={{
-                padding: '8px 12px',
+                padding: '8px',
                 border: 'none',
                 backgroundColor: viewMode === 'calendar' ? '#007AFF' : 'white',
                 color: viewMode === 'calendar' ? 'white' : '#1D1D1F',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                fontSize: '14px',
+                gap: '4px',
+                fontSize: '13px',
                 fontWeight: '500',
                 transition: 'all 0.2s',
                 borderRight: '1px solid #E5E7EB'
@@ -189,22 +205,23 @@ const CalendarView = ({
                   e.currentTarget.style.backgroundColor = 'white';
                 }
               }}
+              title="Calendar View"
             >
               <Calendar style={{ width: '16px', height: '16px' }} />
-              Calendar
+              <span className="hidden sm:inline">Calendar</span>
             </button>
             <button
               onClick={() => setViewMode('list')}
               style={{
-                padding: '8px 12px',
+                padding: '8px',
                 border: 'none',
                 backgroundColor: viewMode === 'list' ? '#007AFF' : 'white',
                 color: viewMode === 'list' ? 'white' : '#1D1D1F',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                fontSize: '14px',
+                gap: '4px',
+                fontSize: '13px',
                 fontWeight: '500',
                 transition: 'all 0.2s'
               }}
@@ -218,25 +235,26 @@ const CalendarView = ({
                   e.currentTarget.style.backgroundColor = 'white';
                 }
               }}
+              title="List View"
             >
               <List style={{ width: '16px', height: '16px' }} />
-              List
+              <span className="hidden sm:inline">List</span>
             </button>
           </div>
 
           {/* Month Navigation */}
-          <div className="flex items-center gap-2">
+          <div style={{ display: 'flex', gap: '4px' }}>
             <Button
               onClick={handlePrevMonth}
               variant="secondary"
               size="sm"
-              icon={<ChevronLeft className="w-4 h-4" />}
+              icon={<ChevronLeft style={{ width: '16px', height: '16px' }} />}
             />
             <Button
               onClick={handleNextMonth}
               variant="secondary"
               size="sm"
-              icon={<ChevronRight className="w-4 h-4" />}
+              icon={<ChevronRight style={{ width: '16px', height: '16px' }} />}
             />
           </div>
 
@@ -244,9 +262,10 @@ const CalendarView = ({
           <Button
             onClick={() => setShowExportModal(true)}
             variant="primary"
-            icon={<Download className="w-5 h-5" />}
+            size="sm"
+            icon={<Download style={{ width: '16px', height: '16px' }} />}
           >
-            Export
+            <span className="hidden sm:inline">Export</span>
           </Button>
         </div>
       </div>

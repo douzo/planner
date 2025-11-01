@@ -3,6 +3,7 @@ import HouseholdSetup from './components/HouseholdSetup';
 import TaskSelection from './components/TaskSelection';
 import CalendarView from './components/CalendarView';
 import DayModal from './components/DayModal';
+import Logo from './components/Logo';
 import {
   getHouseholdMembers,
   saveHouseholdMembers,
@@ -215,14 +216,50 @@ function App() {
     }
   };
 
+  const handleHomeClick = () => {
+    if (currentStep !== STEPS.HOUSEHOLD) {
+      const message = schedule.length > 0
+        ? 'Go to home? Your current schedule will be saved.'
+        : 'Go to home?';
+      if (window.confirm(message)) {
+        setCurrentStep(STEPS.HOUSEHOLD);
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-neutral-bg">
       {/* Header */}
-      <header className="bg-white border-b border-neutral-border py-4 px-8 sticky top-0 z-40">
+      <header className="bg-white border-b border-neutral-border py-4 px-4 md:px-8 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <h1 className="text-2xl font-light text-neutral-text-primary">
-            Smart Life Planner
-          </h1>
+          <button
+            onClick={handleHomeClick}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '4px',
+              transition: 'opacity 0.2s'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+            aria-label="Go to home"
+          >
+            <Logo size={32} />
+            <h1 style={{
+              fontSize: '20px',
+              fontWeight: '300',
+              color: '#1D1D1F',
+              margin: 0
+            }}
+            className="hidden sm:block"
+            >
+              Smart Life Planner
+            </h1>
+          </button>
           {currentStep === STEPS.CALENDAR && (
             <button
               onClick={() => {
@@ -230,7 +267,17 @@ function App() {
                   setCurrentStep(STEPS.HOUSEHOLD);
                 }
               }}
-              className="text-sm text-ios-blue hover:opacity-80 transition-opacity"
+              style={{
+                fontSize: '14px',
+                color: '#007AFF',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '8px 12px',
+                transition: 'opacity 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
             >
               Edit Setup
             </button>

@@ -189,27 +189,13 @@ const ExportModal = ({ isOpen, onClose, month, year, schedule, householdMembers 
                 borderBottom: '2px solid #E5E7EB'
               }}>
                 <h1 style={{
-                  fontSize: '36px',
+                  fontSize: '40px',
                   fontWeight: '300',
                   color: '#1D1D1F',
-                  margin: '0 0 10px 0'
+                  margin: '0'
                 }}>
                   {getMonthName(month)} {year}
                 </h1>
-                <div style={{
-                  fontSize: '24px',
-                  fontWeight: '600',
-                  color: getCompletionColor(stats.percentage),
-                  marginBottom: '5px'
-                }}>
-                  {stats.percentage}% Complete
-                </div>
-                <div style={{
-                  fontSize: '14px',
-                  color: '#86868B'
-                }}>
-                  {stats.completed} of {stats.total} tasks completed
-                </div>
               </div>
 
               {/* Calendar Grid */}

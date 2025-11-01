@@ -221,18 +221,31 @@ const TaskSelection = ({ selectedTasks, onSelectedTasksChange, customFrequencies
         </Button>
       </div>
 
-      {/* Navigation */}
-      <div className="flex justify-between pt-6 border-t border-neutral-border">
-        <Button onClick={onBack} variant="ghost">
-          Back
-        </Button>
-        <Button
-          onClick={onNext}
-          disabled={!canProceed}
-          size="lg"
-        >
-          Generate Smart Schedule
-        </Button>
+      {/* Navigation - Sticky on mobile */}
+      <div
+        style={{
+          position: 'sticky',
+          bottom: 0,
+          backgroundColor: 'white',
+          borderTop: '1px solid #E5E7EB',
+          padding: '16px 0',
+          marginTop: '24px',
+          boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.05)',
+          zIndex: 10
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
+          <Button onClick={onBack} variant="ghost">
+            Back
+          </Button>
+          <Button
+            onClick={onNext}
+            disabled={!canProceed}
+            size="lg"
+          >
+            Generate Smart Schedule
+          </Button>
+        </div>
       </div>
 
       {/* Custom Task Modal */}
