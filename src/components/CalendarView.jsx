@@ -1,0 +1,225 @@
+import React, { useMemo } from 'react';
+import { ChevronLeft, ChevronRight, Download, Printer } from 'lucide-react';
+import Button from './Button';
+import { getCalendarGrid, getMonthName, getScheduleForDate, getCompletionStats } from '../utils/scheduleGenerator';
+import { getCompletionColor } from '../utils/colors';
+
+const DayCell = ({ date, scheduledItems, onTaskClick, onDayClick }) => {
+  if (!date) {
+    return <div className="aspect-square border border-neutral-border bg-gray-50" />;
+  }
+
+  const dayNumber = date.getDate();
+  const itemsForDay = scheduledItems || [];
+  const completedCount = itemsForDay.filter(item => item.completed).length;
+  const totalCount = itemsForDay.length;
+  const completionPercentage = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+
+  // Determine how to display tasks
+  const showAbbreviations = itemsForDay.length > 2;
+
+  return (
+    <div
+      className="aspect-square border border-neutral-border bg-white p-2 hover:bg-neutral-bg-secondary cursor-pointer transition-colors relative overflow-hidden"
+      onClick={() => onDayClick(date)}
+    >
+      {/* Day Number */}
+      <div className="flex justify-between items-start mb-2">
+        <span className="text-sm font-medium text-neutral-text-primary">
+          {dayNumber}
+        </span>
+        {/* Completion Dot */}
+        {totalCount > 0 && (
+          <div
+            className="w-2 h-2 rounded-full"
+            style={{ backgroundColor: getCompletionColor(completionPercentage) }}
+            title={`${completedCount}/${totalCount} completed`}
+          />
+        )}
+      </div>
+
+      {/* Tasks */}
+      <div className="space-y-1">
+        {!showAbbreviations ? (
+          // Full task names for ≤2 tasks
+          itemsForDay.slice(0, 2).map((item) => (
+            <div
+              key={item.id}
+              onClick={(e) => {
+                e.stopPropagation();
+                onTaskClick(item.id);
+              }}
+              className={`
+                text-xs px-2 py-1 rounded text-white truncate
+                ${item.completed ? 'opacity-60 line-through' : ''}
+              `}
+              style={{ backgroundColor: item.assignedTo?.color || '#007AFF' }}
+              title={item.task.name}
+            >
+              {item.task.name}
+            </div>
+          ))
+        ) : (
+          // Abbreviations for >2 tasks
+          <div className="flex flex-wrap gap-1">
+            {itemsForDay.slice(0, 10).map((item) => (
+              <div
+                key={item.id}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onTaskClick(item.id);
+                }}
+                className={`
+                  text-xs px-1.5 py-0.5 rounded font-medium text-white
+                  ${item.completed ? 'opacity-60 line-through' : ''}
+                `}
+                style={{ backgroundColor: item.assignedTo?.color || '#007AFF' }}
+                title={item.task.name}
+              >
+                {item.task.abbreviation}
+              </div>
+            ))}
+            {itemsForDay.length > 10 && (
+              <div className="text-xs px-1.5 py-0.5 text-neutral-text-secondary">
+                +{itemsForDay.length - 10}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const CalendarView = ({
+  month,
+  year,
+  schedule,
+  onMonthChange,
+  onTaskComplete,
+  onDayClick,
+  onExport
+}) => {
+  const calendarGrid = useMemo(() => getCalendarGrid(month, year), [month, year]);
+  const stats = useMemo(() => getCompletionStats(schedule), [schedule]);
+
+  const scheduleByDate = useMemo(() => {
+    const grouped = {};
+    schedule.forEach(item => {
+      const dateKey = new Date(item.date).toDateString();
+      if (!grouped[dateKey]) {
+        grouped[dateKey] = [];
+      }
+      grouped[dateKey].push(item);
+    });
+    return grouped;
+  }, [schedule]);
+
+  const handlePrevMonth = () => {
+    if (month === 0) {
+      onMonthChange(11, year - 1);
+    } else {
+      onMonthChange(month - 1, year);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (month === 11) {
+      onMonthChange(0, year + 1);
+    } else {
+      onMonthChange(month + 1, year);
+    }
+  };
+
+  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  return (
+    <div className="max-w-7xl mx-auto p-8 animate-fade-in">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-4xl font-light text-neutral-text-primary mb-2">
+            {getMonthName(month)} {year}
+          </h1>
+          <div className="flex items-center gap-4">
+            <span className="text-2xl font-semibold" style={{ color: getCompletionColor(stats.percentage) }}>
+              {stats.percentage}% Complete
+            </span>
+            <span className="text-sm text-neutral-text-secondary">
+              {stats.completed} of {stats.total} tasks
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {/* Month Navigation */}
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={handlePrevMonth}
+              variant="secondary"
+              size="sm"
+              icon={<ChevronLeft className="w-4 h-4" />}
+            />
+            <Button
+              onClick={handleNextMonth}
+              variant="secondary"
+              size="sm"
+              icon={<ChevronRight className="w-4 h-4" />}
+            />
+          </div>
+
+          {/* Export Button */}
+          <Button
+            onClick={onExport}
+            variant="primary"
+            icon={<Download className="w-5 h-5" />}
+          >
+            Export
+          </Button>
+        </div>
+      </div>
+
+      {/* Calendar Grid */}
+      <div className="bg-white rounded-ios border border-neutral-border overflow-hidden shadow-sm">
+        {/* Week Days Header */}
+        <div className="grid grid-cols-7 bg-neutral-bg-secondary">
+          {weekDays.map(day => (
+            <div
+              key={day}
+              className="p-3 text-center text-sm font-medium text-neutral-text-secondary uppercase"
+            >
+              {day}
+            </div>
+          ))}
+        </div>
+
+        {/* Calendar Days */}
+        {calendarGrid.map((week, weekIndex) => (
+          <div key={weekIndex} className="grid grid-cols-7">
+            {week.map((date, dayIndex) => (
+              <DayCell
+                key={`${weekIndex}-${dayIndex}`}
+                date={date}
+                scheduledItems={date ? scheduleByDate[date.toDateString()] : []}
+                onTaskClick={onTaskComplete}
+                onDayClick={onDayClick}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+
+      {/* Bottom Stats Bar */}
+      <div className="mt-6 p-4 bg-neutral-bg-secondary rounded-lg flex items-center justify-between">
+        <div className="text-sm text-neutral-text-secondary">
+          Click on tasks to mark them complete, or click on a day for details
+        </div>
+        <div className="text-sm font-medium text-neutral-text-primary">
+          {stats.incomplete} tasks remaining
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CalendarView;
