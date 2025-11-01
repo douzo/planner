@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, Download, Printer } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Download, Calendar, List } from 'lucide-react';
 import Button from './Button';
 import ExportModal from './ExportModal';
+import ListView from './ListView';
 import { getCalendarGrid, getMonthName, getScheduleForDate, getCompletionStats } from '../utils/scheduleGenerator';
 import { getCompletionColor } from '../utils/colors';
 
@@ -102,6 +103,7 @@ const CalendarView = ({
   onDayClick
 }) => {
   const [showExportModal, setShowExportModal] = useState(false);
+  const [viewMode, setViewMode] = useState('calendar'); // 'calendar' or 'list'
   const calendarGrid = useMemo(() => getCalendarGrid(month, year), [month, year]);
   const stats = useMemo(() => getCompletionStats(schedule), [schedule]);
 
@@ -154,6 +156,74 @@ const CalendarView = ({
         </div>
 
         <div className="flex items-center gap-3">
+          {/* View Toggle */}
+          <div style={{
+            display: 'flex',
+            border: '1px solid #E5E7EB',
+            borderRadius: '8px',
+            overflow: 'hidden'
+          }}>
+            <button
+              onClick={() => setViewMode('calendar')}
+              style={{
+                padding: '8px 12px',
+                border: 'none',
+                backgroundColor: viewMode === 'calendar' ? '#007AFF' : 'white',
+                color: viewMode === 'calendar' ? 'white' : '#1D1D1F',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '14px',
+                fontWeight: '500',
+                transition: 'all 0.2s',
+                borderRight: '1px solid #E5E7EB'
+              }}
+              onMouseEnter={(e) => {
+                if (viewMode !== 'calendar') {
+                  e.currentTarget.style.backgroundColor = '#F3F4F6';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (viewMode !== 'calendar') {
+                  e.currentTarget.style.backgroundColor = 'white';
+                }
+              }}
+            >
+              <Calendar style={{ width: '16px', height: '16px' }} />
+              Calendar
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              style={{
+                padding: '8px 12px',
+                border: 'none',
+                backgroundColor: viewMode === 'list' ? '#007AFF' : 'white',
+                color: viewMode === 'list' ? 'white' : '#1D1D1F',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '14px',
+                fontWeight: '500',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                if (viewMode !== 'list') {
+                  e.currentTarget.style.backgroundColor = '#F3F4F6';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (viewMode !== 'list') {
+                  e.currentTarget.style.backgroundColor = 'white';
+                }
+              }}
+            >
+              <List style={{ width: '16px', height: '16px' }} />
+              List
+            </button>
+          </div>
+
           {/* Month Navigation */}
           <div className="flex items-center gap-2">
             <Button
@@ -191,45 +261,57 @@ const CalendarView = ({
         householdMembers={householdMembers}
       />
 
-      {/* Calendar Grid */}
-      <div className="bg-white rounded-ios border border-neutral-border overflow-hidden shadow-sm">
-        {/* Week Days Header */}
-        <div className="grid grid-cols-7 bg-neutral-bg-secondary">
-          {weekDays.map(day => (
-            <div
-              key={day}
-              className="p-3 text-center text-sm font-medium text-neutral-text-secondary uppercase"
-            >
-              {day}
+      {/* Calendar or List View */}
+      {viewMode === 'calendar' ? (
+        <>
+          {/* Calendar Grid */}
+          <div className="bg-white rounded-ios border border-neutral-border overflow-hidden shadow-sm">
+            {/* Week Days Header */}
+            <div className="grid grid-cols-7 bg-neutral-bg-secondary">
+              {weekDays.map(day => (
+                <div
+                  key={day}
+                  className="p-3 text-center text-sm font-medium text-neutral-text-secondary uppercase"
+                >
+                  {day}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* Calendar Days */}
-        {calendarGrid.map((week, weekIndex) => (
-          <div key={weekIndex} className="grid grid-cols-7">
-            {week.map((date, dayIndex) => (
-              <DayCell
-                key={`${weekIndex}-${dayIndex}`}
-                date={date}
-                scheduledItems={date ? scheduleByDate[date.toDateString()] : []}
-                onTaskClick={onTaskComplete}
-                onDayClick={onDayClick}
-              />
+            {/* Calendar Days */}
+            {calendarGrid.map((week, weekIndex) => (
+              <div key={weekIndex} className="grid grid-cols-7">
+                {week.map((date, dayIndex) => (
+                  <DayCell
+                    key={`${weekIndex}-${dayIndex}`}
+                    date={date}
+                    scheduledItems={date ? scheduleByDate[date.toDateString()] : []}
+                    onTaskClick={onTaskComplete}
+                    onDayClick={onDayClick}
+                  />
+                ))}
+              </div>
             ))}
           </div>
-        ))}
-      </div>
 
-      {/* Bottom Stats Bar */}
-      <div className="mt-6 p-4 bg-neutral-bg-secondary rounded-lg flex items-center justify-between">
-        <div className="text-sm text-neutral-text-secondary">
-          Click on tasks to mark them complete, or click on a day for details
-        </div>
-        <div className="text-sm font-medium text-neutral-text-primary">
-          {stats.incomplete} tasks remaining
-        </div>
-      </div>
+          {/* Bottom Stats Bar */}
+          <div className="mt-6 p-4 bg-neutral-bg-secondary rounded-lg flex items-center justify-between">
+            <div className="text-sm text-neutral-text-secondary">
+              Click on tasks to mark them complete, or click on a day for details
+            </div>
+            <div className="text-sm font-medium text-neutral-text-primary">
+              {stats.incomplete} tasks remaining
+            </div>
+          </div>
+        </>
+      ) : (
+        <ListView
+          month={month}
+          year={year}
+          schedule={schedule}
+          onTaskComplete={onTaskComplete}
+        />
+      )}
     </div>
   );
 };
