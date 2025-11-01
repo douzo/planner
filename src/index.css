@@ -1,5 +1,27 @@
 @import "tailwindcss";
 
+/* Define custom theme colors for Tailwind v4 */
+@theme {
+  --color-ios-blue: #007AFF;
+  --color-ios-green: #34C759;
+  --color-ios-orange: #FF9500;
+  --color-ios-red: #FF3B30;
+  --color-ios-purple: #AF52DE;
+  --color-ios-cyan: #5AC8FA;
+  --color-ios-yellow: #FFCC00;
+  --color-ios-pink: #FF2D92;
+
+  --color-neutral-bg: #FFFFFF;
+  --color-neutral-bg-secondary: #F3F4F6;
+  --color-neutral-border: #E5E7EB;
+  --color-neutral-text-primary: #1D1D1F;
+  --color-neutral-text-secondary: #86868B;
+
+  --radius-ios: 12px;
+
+  --font-family-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+}
+
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -10,7 +32,7 @@ body {
   min-height: 100vh;
   background-color: white;
   color: #1D1D1F;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-family-sans);
 }
 
 /* Custom animations */

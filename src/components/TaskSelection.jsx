@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Search, Plus, Check, ChevronDown, Filter, X } from 'lucide-react';
 import Button from './Button';
+import CustomTaskModal from './CustomTaskModal';
 import { PREDEFINED_TASKS, TASK_CATEGORIES, TASK_FREQUENCIES } from '../data/tasks';
 
 const TaskCard = ({ task, isSelected, onToggle, onFrequencyChange, customFrequency }) => {
@@ -100,10 +101,16 @@ const TaskCard = ({ task, isSelected, onToggle, onFrequencyChange, customFrequen
   );
 };
 
-const TaskSelection = ({ selectedTasks, onSelectedTasksChange, customFrequencies, onFrequencyChange, customTasks, onNext, onBack }) => {
+const TaskSelection = ({ selectedTasks, onSelectedTasksChange, customFrequencies, onFrequencyChange, customTasks, onCustomTaskAdd, onNext, onBack }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [showAddCustomTask, setShowAddCustomTask] = useState(false);
+
+  const handleCustomTaskSave = (newTask) => {
+    onCustomTaskAdd(newTask);
+    // Auto-select the newly created task
+    onSelectedTasksChange([...selectedTasks, newTask.id]);
+  };
 
   // Combine predefined and custom tasks
   const allTasks = [...PREDEFINED_TASKS, ...customTasks];
@@ -227,6 +234,13 @@ const TaskSelection = ({ selectedTasks, onSelectedTasksChange, customFrequencies
           Generate Smart Schedule
         </Button>
       </div>
+
+      {/* Custom Task Modal */}
+      <CustomTaskModal
+        isOpen={showAddCustomTask}
+        onClose={() => setShowAddCustomTask(false)}
+        onSave={handleCustomTaskSave}
+      />
     </div>
   );
 };

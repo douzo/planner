@@ -155,9 +155,10 @@ function App() {
     setShowDayModal(true);
   };
 
-  const handleExport = () => {
-    alert('Export functionality coming soon! This will generate a PDF/PNG of your calendar.');
-    // TODO: Implement export with html2pdf.js and html2canvas
+  const handleCustomTaskAdd = (newTask) => {
+    const updatedCustomTasks = [...customTasks, newTask];
+    setCustomTasks(updatedCustomTasks);
+    saveCustomTasks(updatedCustomTasks);
   };
 
   // Render current step
@@ -180,6 +181,7 @@ function App() {
             customFrequencies={customFrequencies}
             onFrequencyChange={handleFrequencyChange}
             customTasks={customTasks}
+            onCustomTaskAdd={handleCustomTaskAdd}
             onNext={handleGenerateSchedule}
             onBack={() => setCurrentStep(STEPS.HOUSEHOLD)}
           />
@@ -192,10 +194,10 @@ function App() {
               month={currentMonth}
               year={currentYear}
               schedule={schedule}
+              householdMembers={householdMembers}
               onMonthChange={handleMonthChange}
               onTaskComplete={handleTaskComplete}
               onDayClick={handleDayClick}
-              onExport={handleExport}
             />
             {showDayModal && selectedDate && (
               <DayModal

@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight, Download, Printer } from 'lucide-react';
 import Button from './Button';
+import ExportModal from './ExportModal';
 import { getCalendarGrid, getMonthName, getScheduleForDate, getCompletionStats } from '../utils/scheduleGenerator';
 import { getCompletionColor } from '../utils/colors';
 
@@ -95,11 +96,12 @@ const CalendarView = ({
   month,
   year,
   schedule,
+  householdMembers,
   onMonthChange,
   onTaskComplete,
-  onDayClick,
-  onExport
+  onDayClick
 }) => {
+  const [showExportModal, setShowExportModal] = useState(false);
   const calendarGrid = useMemo(() => getCalendarGrid(month, year), [month, year]);
   const stats = useMemo(() => getCompletionStats(schedule), [schedule]);
 
@@ -170,7 +172,7 @@ const CalendarView = ({
 
           {/* Export Button */}
           <Button
-            onClick={onExport}
+            onClick={() => setShowExportModal(true)}
             variant="primary"
             icon={<Download className="w-5 h-5" />}
           >
@@ -178,6 +180,16 @@ const CalendarView = ({
           </Button>
         </div>
       </div>
+
+      {/* Export Modal */}
+      <ExportModal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        month={month}
+        year={year}
+        schedule={schedule}
+        householdMembers={householdMembers}
+      />
 
       {/* Calendar Grid */}
       <div className="bg-white rounded-ios border border-neutral-border overflow-hidden shadow-sm">
