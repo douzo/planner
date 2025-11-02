@@ -39,12 +39,25 @@ const ExportModal = ({ isOpen, onClose, month, year, schedule, householdMembers 
     setExportStatus('Generating PDF...');
 
     try {
+      // Wait for fonts to load
+      await document.fonts.ready;
+
+      // Small delay to ensure rendering is complete
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       const element = exportRef.current;
       const opt = {
         margin: [5, 5],
         filename: `${getMonthName(month)}-${year}-Life-Planner.pdf`,
         image: { type: 'jpeg', quality: 0.95 },
-        html2canvas: { scale: 2, useCORS: true },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          letterRendering: true,
+          allowTaint: false,
+          logging: false,
+          imageTimeout: 0
+        },
         jsPDF: { unit: 'mm', format: 'a3', orientation: 'landscape' }
       };
 
@@ -65,11 +78,21 @@ const ExportModal = ({ isOpen, onClose, month, year, schedule, householdMembers 
     setExportStatus('Generating PNG...');
 
     try {
+      // Wait for fonts to load
+      await document.fonts.ready;
+
+      // Small delay to ensure rendering is complete
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       const element = exportRef.current;
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        letterRendering: true,
+        allowTaint: false,
+        logging: false,
+        imageTimeout: 0
       });
 
       canvas.toBlob((blob) => {
@@ -274,24 +297,28 @@ const ExportModal = ({ isOpen, onClose, month, year, schedule, householdMembers 
                               <div style={{
                                 display: 'flex',
                                 flexWrap: 'wrap',
-                                gap: '4px',
                                 flex: '1',
-                                alignContent: 'flex-start'
+                                alignContent: 'flex-start',
+                                margin: '-2px'
                               }}>
                                 {items.slice(0, 10).map((item) => (
                                   <span
                                     key={item.id}
                                     style={{
+                                      display: 'inline-block',
                                       fontSize: '9px',
                                       padding: '3px 5px',
+                                      margin: '2px',
                                       borderRadius: '3px',
                                       backgroundColor: item.assignedTo?.color || '#007AFF',
                                       color: 'white',
                                       fontWeight: '600',
                                       opacity: item.completed ? 0.6 : 1,
                                       textDecoration: item.completed ? 'line-through' : 'none',
-                                      lineHeight: '1.2',
-                                      whiteSpace: 'nowrap'
+                                      lineHeight: '12px',
+                                      whiteSpace: 'nowrap',
+                                      verticalAlign: 'middle',
+                                      textAlign: 'center'
                                     }}
                                   >
                                     {item.task.abbreviation}
