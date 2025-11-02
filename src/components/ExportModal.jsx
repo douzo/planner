@@ -250,18 +250,17 @@ const ExportModal = ({ isOpen, onClose, month, year, schedule, householdMembers 
                         <div
                           key={dayIndex}
                           style={{
-                            minHeight: '80px',
-                            padding: '8px',
+                            minHeight: '100px',
+                            padding: '10px',
                             borderRight: dayIndex < 6 ? '1px solid #E5E7EB' : 'none',
-                            backgroundColor: date ? 'white' : '#F9FAFB'
+                            backgroundColor: date ? 'white' : '#F9FAFB',
+                            display: 'flex',
+                            flexDirection: 'column'
                           }}
                         >
                           {date && (
                             <>
                               <div style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
                                 marginBottom: '6px'
                               }}>
                                 <span style={{
@@ -271,30 +270,28 @@ const ExportModal = ({ isOpen, onClose, month, year, schedule, householdMembers 
                                 }}>
                                   {date.getDate()}
                                 </span>
-                                {total > 0 && (
-                                  <div
-                                    style={{
-                                      width: '8px',
-                                      height: '8px',
-                                      borderRadius: '50%',
-                                      backgroundColor: getCompletionColor(completionPercentage)
-                                    }}
-                                  />
-                                )}
                               </div>
-                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3px' }}>
+                              <div style={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                gap: '4px',
+                                flex: '1',
+                                alignContent: 'flex-start'
+                              }}>
                                 {items.slice(0, 10).map((item) => (
                                   <span
                                     key={item.id}
                                     style={{
                                       fontSize: '9px',
-                                      padding: '2px 4px',
+                                      padding: '3px 5px',
                                       borderRadius: '3px',
                                       backgroundColor: item.assignedTo?.color || '#007AFF',
                                       color: 'white',
                                       fontWeight: '600',
                                       opacity: item.completed ? 0.6 : 1,
-                                      textDecoration: item.completed ? 'line-through' : 'none'
+                                      textDecoration: item.completed ? 'line-through' : 'none',
+                                      lineHeight: '1.2',
+                                      whiteSpace: 'nowrap'
                                     }}
                                   >
                                     {item.task.abbreviation}

@@ -7,12 +7,22 @@ A beautiful, web-based household task management application designed to help in
 ### Core Functionality
 - **Household Member Management**: Add multiple household members with color-coded assignments
 - **Task Library**: 35+ predefined tasks organized in 15 categories
+- **Custom Task Creation**: Create your own tasks with custom emojis, categories, and frequencies
 - **Smart Schedule Generation**: Automatic monthly schedule generation based on task frequencies
 - **Visual Calendar View**: Beautiful monthly calendar with task display and completion tracking
+- **List View Alternative**: Chronological task list with sorting and filtering options
 - **Task Completion Tracking**: One-click task completion with visual feedback
 - **Day Detail Modal**: Detailed view of all tasks for a specific day
 - **Frequency Customization**: Adjust task frequencies (daily, weekly, bi-weekly, monthly, quarterly)
+- **Export & Print**: Export your calendar as PDF, PNG, or print directly from the browser
 - **Local Storage Persistence**: All data saved locally in your browser
+
+### Enhanced Features
+- **Custom Logo & Branding**: Professional logo with house and checkmark design
+- **Clickable Header**: Easy navigation back to home from any screen
+- **Sticky Navigation**: Action buttons stay accessible without scrolling
+- **Mobile Responsive**: Fully optimized for mobile, tablet, and desktop devices
+- **iOS-Inspired Design**: Clean, modern interface following Apple's design principles
 
 ### Task Categories
 - Personal Care
@@ -41,11 +51,12 @@ A beautiful, web-based household task management application designed to help in
 ## Technology Stack
 
 - **Frontend Framework**: React 18
-- **Build Tool**: Vite
-- **Styling**: Tailwind CSS v4
+- **Build Tool**: Vite 7.1.12
+- **Styling**: Tailwind CSS v4 with @tailwindcss/postcss
 - **Icons**: Lucide React
-- **Storage**: Browser Local Storage
-- **Export**: html2pdf.js & html2canvas (planned)
+- **Storage**: Browser Local Storage API
+- **Export**: html2pdf.js & html2canvas
+- **Design System**: iOS-inspired color palette and typography
 
 ## Getting Started
 
@@ -98,18 +109,26 @@ The built files will be in the `dist/` directory.
 - Tasks are automatically distributed throughout the month
 - Each task is randomly assigned to a household member
 
-### 4. Calendar View
-- View your entire month's schedule at a glance
-- Click tasks to mark them complete
-- Click days to see detailed task list
+### 4. Calendar & List Views
+- **Calendar View**: View your entire month's schedule at a glance
+- **List View**: See tasks in chronological order with sorting and filtering
+- Toggle between views with the view switcher
 - Navigate between months with arrow buttons
 - Track completion percentage
 
 ### 5. Task Management
 - Mark tasks complete with a single click
+- Click days to see detailed task list in a modal
 - Visual feedback shows completed tasks
 - Completion stats updated in real-time
 - Data persists automatically
+
+### 6. Export & Print
+- Export your calendar as PDF for digital storage
+- Generate PNG image for sharing
+- Print directly from browser with optimized layout
+- Exports include task legend and household member information
+- Clean professional format without clutter
 
 ## Design Philosophy
 
@@ -136,6 +155,18 @@ The calendar intelligently displays tasks:
 - Firefox (latest 2 versions)
 - Edge (latest 2 versions)
 
+## Deployment
+
+The application can be deployed to various hosting platforms. See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions for:
+
+- **Netlify**: One-click deployment with automatic builds
+- **Vercel**: Git-based deployment with preview URLs
+- **GitHub Pages**: Free hosting for public repositories
+- **Surge**: Quick static hosting via CLI
+- **Cloudflare Pages**: Global CDN with instant rollback
+
+All platforms offer free tiers suitable for this application.
+
 ## Data Privacy
 
 - All data stored locally in your browser
@@ -145,20 +176,34 @@ The calendar intelligently displays tasks:
 
 ## Roadmap
 
-### Phase 2 (Planned)
-- [ ] PDF/PNG export functionality
-- [ ] Print optimization
-- [ ] Custom task creation modal
-- [ ] List view alternative
-- [ ] Advanced task editing
-- [ ] Task notes and attachments
+### Phase 1 - MVP ✅ (Completed)
+- [x] Household member management
+- [x] Task library with 35+ predefined tasks
+- [x] Smart schedule generation algorithm
+- [x] Visual calendar view
+- [x] Task completion tracking
+- [x] Local storage persistence
 
-### Phase 3 (Future)
-- [ ] Calendar integration (Google, Apple)
-- [ ] Email reminders
+### Phase 2 - Enhanced Features ✅ (Completed)
+- [x] PDF/PNG export functionality
+- [x] Print optimization
+- [x] Custom task creation modal with emoji picker
+- [x] List view alternative with sorting and filtering
+- [x] Logo and branding
+- [x] Mobile responsive design
+- [x] Sticky navigation for better UX
+
+### Phase 3 (Future Enhancements)
+- [ ] Advanced task editing and customization
+- [ ] Task notes and attachments
+- [ ] Recurring task templates
+- [ ] Task history and analytics
+- [ ] Dark mode support
+- [ ] Calendar integration (Google Calendar, Apple Calendar)
+- [ ] Email/push notifications
 - [ ] User accounts & cloud sync
-- [ ] Mobile PWA
-- [ ] Analytics dashboard
+- [ ] Progressive Web App (PWA)
+- [ ] Multi-language support
 
 ## Development
 
@@ -167,33 +212,45 @@ The calendar intelligently displays tasks:
 planner/
 ├── src/
 │   ├── components/      # React components
-│   │   ├── Button.jsx
-│   │   ├── CalendarView.jsx
-│   │   ├── DayModal.jsx
-│   │   ├── HouseholdSetup.jsx
-│   │   └── TaskSelection.jsx
+│   │   ├── Button.jsx           # Reusable button with variants
+│   │   ├── CalendarView.jsx     # Monthly calendar grid
+│   │   ├── ListView.jsx         # Chronological task list
+│   │   ├── DayModal.jsx         # Day detail popup
+│   │   ├── HouseholdSetup.jsx   # Member onboarding
+│   │   ├── TaskSelection.jsx    # Task library with filters
+│   │   ├── CustomTaskModal.jsx  # Custom task creation
+│   │   ├── ExportModal.jsx      # PDF/PNG/Print export
+│   │   └── Logo.jsx             # Custom SVG logo
 │   ├── data/            # Static data and constants
-│   │   └── tasks.js
+│   │   └── tasks.js             # 35+ predefined tasks
 │   ├── utils/           # Utility functions
-│   │   ├── colors.js
-│   │   ├── scheduleGenerator.js
-│   │   └── storage.js
+│   │   ├── colors.js            # iOS color palette
+│   │   ├── scheduleGenerator.js # Schedule algorithm
+│   │   └── storage.js           # Local storage helpers
 │   ├── App.jsx          # Main app component
 │   ├── main.jsx         # App entry point
-│   └── index.css        # Global styles
+│   └── index.css        # Global styles & Tailwind config
 ├── public/              # Static assets
+│   └── favicon.svg      # Custom favicon
+├── DEPLOYMENT.md        # Deployment guide
+├── TESTING.md           # Testing documentation
 ├── package.json
 ├── vite.config.js
+├── postcss.config.js
 └── tailwind.config.js
 ```
 
 ### Key Components
 
-**HouseholdSetup**: Onboarding flow for adding household members
-**TaskSelection**: Task library with search, filter, and selection
-**CalendarView**: Monthly calendar grid with task display
-**DayModal**: Detailed view for a specific day
-**Button**: Reusable button component with variants
+**HouseholdSetup**: Onboarding flow for adding household members with color assignment
+**TaskSelection**: Task library with search, category filter, frequency adjustment, and custom task creation
+**CalendarView**: Monthly calendar grid with task display, view toggle, and mobile-responsive controls
+**ListView**: Alternative chronological view with sort (date/priority/category) and filter (all/pending/completed)
+**DayModal**: Detailed modal view for a specific day showing all tasks with completion toggles
+**ExportModal**: Export preview and generation for PDF, PNG, and browser print
+**CustomTaskModal**: Full-featured modal for creating custom tasks with 50+ emoji options
+**Logo**: Custom SVG logo component (house with checkmark design)
+**Button**: Reusable button component with inline styles for cross-browser compatibility
 
 ### Utilities
 
