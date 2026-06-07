@@ -307,7 +307,7 @@ const ExportModal = ({ isOpen, onClose, month, year, schedule, householdMembers 
                                     style={{
                                       display: 'inline-block',
                                       fontSize: '9px',
-                                      padding: '3px 5px',
+                                      padding: '0px 5px 7px 5px',
                                       margin: '2px',
                                       borderRadius: '3px',
                                       backgroundColor: item.assignedTo?.color || '#007AFF',
@@ -369,7 +369,9 @@ const ExportModal = ({ isOpen, onClose, month, year, schedule, householdMembers 
                       }}
                     >
                       <span style={{
-                        padding: '2px 6px',
+
+                                      padding: '0px 6px 7px 6px',
+                        // padding: '2px 6px',
                         borderRadius: '4px',
                         backgroundColor: '#E5E7EB',
                         fontWeight: '600',
